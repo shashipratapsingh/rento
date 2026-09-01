@@ -21,33 +21,24 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http) throws Exception {
 
-        http
-                .csrf(csrf -> csrf.disable())
-
+        http.csrf(csrf -> csrf.disable())
                 .sessionManagement(session ->
-                        session.sessionCreationPolicy(
-                                SessionCreationPolicy.STATELESS
-                        )
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-
                 .authorizeHttpRequests(auth -> auth
-
                         // PUBLIC APIs
                         .requestMatchers(
                                 "/api/auth/send-otp",
                                 "/api/auth/verify-otp"
                         ).permitAll()
-
                         // CUSTOMER
                         .requestMatchers(
                                 "/customer/**"
                         ).hasRole("CUSTOMER")
-
                         // OWNER
                         .requestMatchers(
                                 "/owner/**"
                         ).hasRole("OWNER")
-
                         // ADMIN
                         .requestMatchers(
                                 "/admin/**"
@@ -56,12 +47,10 @@ public class SecurityConfig {
                         // Everything else
                         .anyRequest().authenticated()
                 )
-
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class
                 );
-
         return http.build();
     }
 }
