@@ -5,11 +5,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/customer")
-public class CustomerController {
+@RequestMapping("/owner")
+public class OwnerController {
 
-    @GetMapping("/profile")
-    public String profile() {
-        return "Customer profile";
+    @GetMapping("/properties")
+    public String properties() {
+        return "Owner properties";
     }
 }

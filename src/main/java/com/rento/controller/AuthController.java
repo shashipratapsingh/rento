@@ -19,19 +19,12 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/send-otp")
-    public ResponseEntity<String> sendOtp(
-            @RequestBody SendOtpRequest request) {
-
-        return ResponseEntity.ok(
-                authService.sendOtp(
-                        request.getMobileNumber()));
+    public ResponseEntity<String> sendOtp(@RequestBody SendOtpRequest request) {
+        return ResponseEntity.ok(authService.sendOtp(request.getMobileNumber()));
     }
 
     @PostMapping("/verify-otp")
-    public ResponseEntity<AuthResponse> verifyOtp(
-            @RequestBody VerifyOtpRequest request) {
-
-        return ResponseEntity.ok(
-                authService.verifyOtp(request));
+    public ResponseEntity<AuthResponse> verifyOtp(@RequestBody VerifyOtpRequest request) {
+        return ResponseEntity.ok(authService.verifyOtp(request));
     }
 }

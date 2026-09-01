@@ -19,6 +19,6 @@ public class Customer {
     private String mobileNumber;
 
     private Boolean verified;
-
+    private String role;
     // getters setters
 }

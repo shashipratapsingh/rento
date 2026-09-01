@@ -8,6 +8,5 @@ public class AuthResponse {
     private String customerId;
     private String token;
     private String message;
-
-    // getter setter
+    private String role;
 }

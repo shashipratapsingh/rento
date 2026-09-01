@@ -25,6 +25,7 @@ public class AuthService {
     public String sendOtp(String mobileNumber) {
         String otp = String.valueOf(
                 ThreadLocalRandom.current().nextInt(1000, 9999));
+
         OtpVerification otpEntity = otpRepository
                 .findByMobileNumber(mobileNumber)
                 .orElseGet(() -> {
@@ -32,59 +33,51 @@ public class AuthService {
                     newEntity.setMobileNumber(mobileNumber);
                     return newEntity;
                 });
+
         otpEntity.setOtp(otp);
         otpEntity.setVerified(false);
         otpEntity.setExpiryTime(LocalDateTime.now().plusMinutes(5));
         otpRepository.save(otpEntity);
-        // SMS Provider Call Here
+
         return "OTP Sent Successfully. OTP: " + otp;
     }
 
     @Transactional
-    public AuthResponse verifyOtp(
-            VerifyOtpRequest request) {
-        OtpVerification otp =  otpRepository
-                        .findTopByMobileNumberOrderByIdDesc(
-                                request.getMobileNumber())
-                        .orElseThrow(
-                                () -> new RuntimeException("OTP not found"));
+    public AuthResponse verifyOtp(VerifyOtpRequest request) {
+        OtpVerification otp = otpRepository
+                .findTopByMobileNumberOrderByIdDesc(request.getMobileNumber())
+                .orElseThrow(() -> new RuntimeException("OTP not found"));
 
         if (!otp.getOtp().equals(request.getOtp())) {
             throw new RuntimeException(Content.INVALID_OTP);
         }
 
-        if (LocalDateTime.now()
-                .isAfter(otp.getExpiryTime())) {
+        if (LocalDateTime.now().isAfter(otp.getExpiryTime())) {
             throw new RuntimeException(Content.OTP_EXPIRED);
         }
 
         otp.setVerified(true);
 
-        Customer customer =
-                customerRepository
-                        .findByMobileNumber(
-                                request.getMobileNumber())
-                        .orElseGet(() -> {
+        Customer customer = customerRepository
+                .findByMobileNumber(request.getMobileNumber())
+                .orElseGet(() -> {
+                    Customer c = new Customer();
+                    c.setCustomerId("CUST" + System.currentTimeMillis());
+                    c.setMobileNumber(request.getMobileNumber());
+                    c.setVerified(true);
+                    c.setRole(request.getRole());
+                    return customerRepository.save(c);
+                });
 
-                            Customer c = new Customer();
+        String token = jwtService.generateToken(customer.getMobileNumber(), customer.getRole());
 
-                            c.setCustomerId(
-                                    "CUST" + System.currentTimeMillis());
-
-                            c.setMobileNumber(
-                                    request.getMobileNumber());
-
-                            c.setVerified(true);
-
-                            return customerRepository.save(c);
-                        });
-
-        String token =jwtService.generateToken(customer.getMobileNumber());
-        AuthResponse response =new AuthResponse();
+        AuthResponse response = new AuthResponse();
         response.setCustomerId(customer.getCustomerId());
         response.setToken(token);
         response.setMessage("Login Successful");
+        response.setRole(customer.getRole());
 
         return response;
     }
+
 }
