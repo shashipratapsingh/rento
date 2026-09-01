@@ -32,7 +32,7 @@ public class AuthService {
         otpEntity.setExpiryTime(LocalDateTime.now().plusMinutes(5));
         otpRepository.save(otpEntity);
         // SMS Provider Call Here
-        return "OTP Sent Successfully";
+        return "OTP Sent Successfully. OTP: " + otp; // ⚠️ dev/testing only
     }
 
     @Transactional
