@@ -10,4 +10,5 @@ public interface OtpRepository
 
     Optional<OtpVerification>
     findTopByMobileNumberOrderByIdDesc(String mobileNumber);
+    Optional<OtpVerification> findByMobileNumber(String mobileNumber);
 }

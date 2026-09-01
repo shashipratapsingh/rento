@@ -25,14 +25,19 @@ public class AuthService {
     public String sendOtp(String mobileNumber) {
         String otp = String.valueOf(
                 ThreadLocalRandom.current().nextInt(1000, 9999));
-        OtpVerification otpEntity = new OtpVerification();
-        otpEntity.setMobileNumber(mobileNumber);
+        OtpVerification otpEntity = otpRepository
+                .findByMobileNumber(mobileNumber)
+                .orElseGet(() -> {
+                    OtpVerification newEntity = new OtpVerification();
+                    newEntity.setMobileNumber(mobileNumber);
+                    return newEntity;
+                });
         otpEntity.setOtp(otp);
         otpEntity.setVerified(false);
         otpEntity.setExpiryTime(LocalDateTime.now().plusMinutes(5));
         otpRepository.save(otpEntity);
         // SMS Provider Call Here
-        return "OTP Sent Successfully. OTP: " + otp; // ⚠️ dev/testing only
+        return "OTP Sent Successfully. OTP: " + otp;
     }
 
     @Transactional
