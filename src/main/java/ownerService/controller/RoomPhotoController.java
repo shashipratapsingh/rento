@@ -2,6 +2,7 @@ package ownerService.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ownerService.entity.RoomPhoto;
@@ -16,7 +17,7 @@ import java.util.List;
 public class RoomPhotoController {
 
     private final PhotoService photoService;
-
+    @PreAuthorize("hasRole('OWNER')")
     @PostMapping("/{roomId}/photos")
     public ResponseEntity<RoomPhoto> uploadPhoto(
             @PathVariable Long roomId,
@@ -30,7 +31,7 @@ public class RoomPhotoController {
                 )
         );
     }
-
+    @PreAuthorize("hasAnyRole('OWNER', 'CUSTOMER')")
     @GetMapping("/{roomId}/photos")
     public ResponseEntity<List<RoomPhoto>>
     getPhotos(
@@ -40,7 +41,7 @@ public class RoomPhotoController {
                 photoService.getPhotos(roomId)
         );
     }
-
+    @PreAuthorize("hasRole('OWNER')")
     @DeleteMapping("/photos/{photoId}")
     public ResponseEntity<String> deletePhoto(
             @PathVariable Long photoId)

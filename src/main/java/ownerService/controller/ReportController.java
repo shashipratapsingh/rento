@@ -3,6 +3,7 @@ package ownerService.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ownerService.dto.ReportRequest;
 import ownerService.entity.ListingReport;
@@ -16,7 +17,7 @@ import java.util.List;
 public class ReportController {
 
     private final ReportService reportService;
-
+    @PreAuthorize("hasRole('CUSTOMER')")
     @PostMapping("/rooms/{roomId}")
     public ResponseEntity<ListingReport> createReport(
             @PathVariable Long roomId,
@@ -29,7 +30,7 @@ public class ReportController {
                 )
         );
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<ListingReport>>
     getAllReports() {
@@ -38,7 +39,7 @@ public class ReportController {
                 reportService.getAllReports()
         );
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<ListingReport>
     getReport(
@@ -48,7 +49,7 @@ public class ReportController {
                 reportService.getReport(id)
         );
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}/resolve")
     public ResponseEntity<ListingReport>
     resolveReport(

@@ -2,6 +2,7 @@ package ownerService.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ownerService.dto.OwnerRequest;
 import ownerService.dto.OwnerResponse;
@@ -14,6 +15,7 @@ public class OwnerController {
 
     private final OwnerService ownerService;
 
+    @PreAuthorize("hasRole('OWNER')")
     @PostMapping
     public ResponseEntity<OwnerResponse> createOwner(
             @Valid @RequestBody OwnerRequest request) {
@@ -23,6 +25,7 @@ public class OwnerController {
         );
     }
 
+    @PreAuthorize("hasRole('OWNER')")
     @GetMapping("/{id}")
     public ResponseEntity<OwnerResponse> getOwner(
             @PathVariable Long id) {
@@ -32,6 +35,7 @@ public class OwnerController {
         );
     }
 
+    @PreAuthorize("hasRole('OWNER')")
     @PutMapping("/{id}")
     public ResponseEntity<OwnerResponse> updateOwner(
             @PathVariable Long id,
@@ -42,6 +46,7 @@ public class OwnerController {
         );
     }
 
+    @PreAuthorize("hasRole('OWNER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteOwner(
             @PathVariable Long id) {

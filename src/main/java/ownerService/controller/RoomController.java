@@ -3,6 +3,7 @@ package ownerService.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ownerService.dto.RoomRequest;
 import ownerService.dto.RoomResponse;
@@ -19,6 +20,7 @@ public class RoomController {
 
     private final RoomService roomService;
 
+    @PreAuthorize("hasRole('OWNER')")
     @PostMapping
     public ResponseEntity<RoomResponse> createRoom(
             @Valid @RequestBody RoomRequest request) {
@@ -27,7 +29,7 @@ public class RoomController {
                 roomService.createRoom(request)
         );
     }
-
+    @PreAuthorize("hasAnyRole('OWNER', 'CUSTOMER')")
     @GetMapping("/{id}")
     public ResponseEntity<RoomResponse> getRoom(
             @PathVariable Long id) {
@@ -36,7 +38,7 @@ public class RoomController {
                 roomService.getRoom(id)
         );
     }
-
+    @PreAuthorize("hasRole('OWNER')")
     @GetMapping("/owner/{ownerId}")
     public ResponseEntity<List<RoomResponse>>
     getOwnerRooms(
@@ -46,7 +48,7 @@ public class RoomController {
                 roomService.getRoomsByOwner(ownerId)
         );
     }
-
+    @PreAuthorize("hasRole('OWNER')")
     @PutMapping("/{id}")
     public ResponseEntity<RoomResponse> updateRoom(
             @PathVariable Long id,
@@ -56,7 +58,7 @@ public class RoomController {
                 roomService.updateRoom(id, request)
         );
     }
-
+    @PreAuthorize("hasRole('OWNER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteRoom(
             @PathVariable Long id) {
@@ -67,7 +69,7 @@ public class RoomController {
                 "Room deleted successfully"
         );
     }
-
+    @PreAuthorize("hasRole('OWNER')")
     @PatchMapping("/{id}/mark-rented")
     public ResponseEntity<RoomResponse> markAsRented(
             @PathVariable Long id) {
@@ -76,7 +78,7 @@ public class RoomController {
                 roomService.markAsRented(id)
         );
     }
-
+    @PreAuthorize("hasRole('OWNER')")
     @PatchMapping("/{id}/availability")
     public ResponseEntity<RoomResponse>
     updateAvailability(
@@ -90,7 +92,7 @@ public class RoomController {
                 )
         );
     }
-
+    @PreAuthorize("hasAnyRole('OWNER', 'CUSTOMER')")
     @GetMapping("/search/city")
     public ResponseEntity<List<RoomResponse>>
     searchByCity(

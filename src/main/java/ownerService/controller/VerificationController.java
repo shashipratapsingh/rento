@@ -2,6 +2,7 @@ package ownerService.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ownerService.entity.Owner;
 import ownerService.entity.RoomPhoto;
@@ -13,7 +14,7 @@ import ownerService.service.VerificationService;
 public class VerificationController {
 
     private final VerificationService verificationService;
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/owners/{ownerId}/verify")
     public ResponseEntity<Owner> verifyOwner(
             @PathVariable Long ownerId) {
@@ -24,7 +25,7 @@ public class VerificationController {
                 )
         );
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/owners/{ownerId}/reject")
     public ResponseEntity<Owner> rejectOwner(
             @PathVariable Long ownerId) {
