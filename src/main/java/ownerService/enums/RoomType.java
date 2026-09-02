@@ -5,7 +5,17 @@ public enum RoomType {
     SINGLE_ROOM,
     ONE_RK,
     ONE_BHK,
+    TWO_BHK,
+    THREE_BHK,
+    FOUR_BHK,
+    FIVE_BHK,
     PG,
-    TWO_BHK
+    STUDIO,
+    DUPLEX,
+    PENTHOUSE,
+    VILLA,
+    HOUSE,
+    FLAT,
+    APARTMENT
 
 }
